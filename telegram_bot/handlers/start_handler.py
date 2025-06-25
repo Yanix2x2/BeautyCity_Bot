@@ -1,7 +1,7 @@
 from telegram import Update, InputFile
 from telegram.ext import CommandHandler, CallbackContext
 from pathlib import Path
-from keyboards import get_main_keyboard
+from telegram_bot.keyboards import get_main_keyboard
 
 
 def send_personal_agreement(update: Update) -> None:
