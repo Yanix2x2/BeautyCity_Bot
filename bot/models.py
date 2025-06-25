@@ -24,6 +24,10 @@ class Service(models.Model):
     def __str__(self):
         return f'{self.treatment} — {self.price} руб.'
 
+    class Meta:
+        verbose_name = "Услуга"
+        verbose_name_plural = "Услуги"
+
 
 class Master(models.Model):
     name = models.CharField(max_length=50, verbose_name='Имя мастера')
@@ -44,6 +48,10 @@ class Master(models.Model):
         if self.salon:
             return f"{self.name} из «{self.salon.address}»"
         return "Мастер без салона"
+
+    class Meta:
+        verbose_name = "Мастер"
+        verbose_name_plural = "Мастера"
  
 
 class Client(models.Model):
@@ -53,6 +61,10 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Клиент"
+        verbose_name_plural = "Клиенты"
 
 
 class Registration(models.Model):
@@ -94,7 +106,11 @@ class Registration(models.Model):
     )
 
     def __str__(self):
-        return f"Бронь №{self.pk} на {self.service_date} в {self.slot}"
+        return f"Запись №{self.pk} на {self.service_date} в {self.slot}"
+
+    class Meta:
+        verbose_name = "Запись"
+        verbose_name_plural = "Записи"
 
 
 # Registration.objects.create(
