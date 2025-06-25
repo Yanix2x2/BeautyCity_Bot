@@ -17,9 +17,10 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from bot.views import MasterAutocomplete 
+from bot.views import MasterAutocomplete, SalonAutocomplete 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('master-autocomplete/', MasterAutocomplete.as_view(), name='master-autocomplete'),
+    path('salon-autocomplete/', SalonAutocomplete.as_view(), name='salon-autocomplete'),
 ]

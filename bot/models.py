@@ -71,12 +71,16 @@ class Registration(models.Model):
     salon = models.ForeignKey(
         Salon,
         verbose_name='Салон',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
     master = models.ForeignKey(
         Master,
         verbose_name='Мастер',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
     )
     client = models.ForeignKey(
         Client,
