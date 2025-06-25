@@ -12,6 +12,10 @@ def show_salon_addresses(update: Update, context: CallbackContext) -> None:
 
     if salons.exists():
         addresses = "\n\n".join([f"📍 {salon.address}" for salon in salons])
-        update.message.reply_text(f"Наши салоны:\n\n{addresses}")
+        text = (
+            f"Наши салоны:\n\n{addresses}\n\n"  
+            "💬 Чтобы записаться, нажмите «🗓 Записаться» ниже 👇"
+        )
+        update.message.reply_text(text)
     else:
         update.message.reply_text("Пока что салоны не добавлены")
