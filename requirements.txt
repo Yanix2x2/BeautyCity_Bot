@@ -1,3 +1,8 @@
 django==5.2.3
+<<<<<<< HEAD
 django-phonenumber-field==7.0.0 
 phonenumbers==8.13.0
+=======
+python-telegram-bot==13.15
+python-dotenv==1.1.1
+>>>>>>> origin/main
