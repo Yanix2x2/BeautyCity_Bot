@@ -10,21 +10,19 @@ class Salon(models.Model):
 
 
 class Service(models.Model):
-    TREATMENT_CHOICES = [
-        ('Hair', 'Стилист'),
-        ('Nail', 'Ноготочки'),
-        ('Makeup', 'Макияж')
-    ]
-    
     treatment = models.CharField(
-        max_length=10,
-        choices=TREATMENT_CHOICES,
-        verbose_name='Тип услуги'
+        max_length=20,
+        verbose_name='Название услуги',
+        unique=True
     )
-    price = models.DecimalField(max_digits=6, decimal_places=0, verbose_name='Цена')
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=0,
+        verbose_name='Цена'
+    )
 
     def __str__(self):
-        return f'{self.get_treatment_display()} {self.price}р.'
+        return f'{self.treatment} — {self.price} руб.'
 
 
 class Master(models.Model):
@@ -34,7 +32,8 @@ class Master(models.Model):
         verbose_name='Салон',
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
+        related_name='masters'
     )
     services = models.ManyToManyField(
         Service,
