@@ -12,7 +12,12 @@ def get_service_select_handlers():
 
 
 def show_service_selection(update: Update, context: CallbackContext) -> None:
-    services = Service.objects.all()
+    master_id = context.user_data.get("selected_master_id")
+    if master_id:
+        services = Service.objects.filter(master__id=master_id)
+    else:
+        services = Service.objects.all()
+
     if not services.exists():
         reply_or_edit(update, "К сожалению, пока нет доступных процедур.")
         return
@@ -33,7 +38,7 @@ def save_selected_service(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
 
-    service_id = query.data.replace("select_service_", "")
+    service_id = int(query.data.replace("select_service_", ""))
     context.user_data["selected_service_id"] = service_id
 
     try:
@@ -42,4 +47,5 @@ def save_selected_service(update: Update, context: CallbackContext) -> None:
         reply_or_edit(update, "Услуга не найдена.")
         return
 
-    show_date_selection(update, context)
+    context.user_data["date_action_prefix"] = "slot"
+    show_date_selection(update, context, action_prefix="slot")

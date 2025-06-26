@@ -9,22 +9,29 @@ from telegram_bot.utils.callback import parse_callback_id
 
 def get_master_select_handlers():
     return [
-        CallbackQueryHandler(show_master_selection, pattern=r"^select_date_"),
+        CallbackQueryHandler(show_master_selection, pattern=r"^select_date_master_"),
     ]
 
 
 def show_master_selection(update: Update, context: CallbackContext) -> None:
+    print("[DEBUG] show_master_selection вызван")
+
     query = update.callback_query
     query.answer()
 
-    selected_date_str = query.data.replace("select_date_", "")
+    selected_date_str = query.data.replace("select_date_master_", "")
     context.user_data["selected_date"] = selected_date_str
 
     salon_id = context.user_data.get("selected_salon_id")
     service_id = context.user_data.get("selected_service_id")
+    slot = context.user_data.get("selected_slot")
 
     if not salon_id or not service_id:
-        reply_or_edit(update, "Ошибка: не выбраны салон или услуга.")
+        reply_or_edit(update, "Не выбраны салон или услуга.")
+        return
+
+    if not slot:
+        reply_or_edit(update, "Не выбрано время.")
         return
 
     try:
@@ -35,13 +42,11 @@ def show_master_selection(update: Update, context: CallbackContext) -> None:
         return
 
     selected_date = parse_date_from_str(selected_date_str)
-    slot = "10:00"  # TODO: заменить на выбор времени, пока заглушка
-    context.user_data["selected_slot"] = slot
 
     available_masters = get_available_masters(salon, service, selected_date, slot)
 
     if not available_masters:
-        reply_or_edit(update, "Нет доступных мастеров на выбранную дату.")
+        reply_or_edit(update, "Нет доступных мастеров на выбранную дату и время.")
         return
 
     buttons = [

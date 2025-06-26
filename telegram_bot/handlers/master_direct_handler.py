@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext, MessageHandler, Filters, CallbackQuery
 from bot.models import Master
 from telegram_bot.utils.reply_or_edit import reply_or_edit
 from telegram_bot.handlers.booking.date_select_handler import show_date_selection
+from telegram_bot.handlers.booking.service_select_handler import show_service_selection
 
 
 def get_master_direct_handlers():
@@ -42,5 +43,5 @@ def handle_master_selected(update: Update, context: CallbackContext) -> None:
 
     context.user_data["selected_master_id"] = master.id
     context.user_data["selected_salon_id"] = master.salon.id if master.salon else None
-
-    show_date_selection(update, context)
+    context.user_data["date_action_prefix"] = "slot"
+    show_service_selection(update, context)

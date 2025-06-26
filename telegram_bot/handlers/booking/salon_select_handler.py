@@ -30,7 +30,7 @@ def save_selected_salon(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
 
-    salon_id = query.data.replace("select_salon_", "")
+    salon_id = int(query.data.replace("select_salon_", ""))
     context.user_data["selected_salon_id"] = salon_id
 
     show_service_selection(update, context)

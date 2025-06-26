@@ -20,9 +20,14 @@ def get_available_masters(salon, service, service_date, slot):
         services=service
     ).distinct()
 
+    print(f"[DEBUG] Найдено мастеров в салоне {salon}: {[m.name for m in masters]}")
+    print(f"[DEBUG] Слот: {slot}, Дата: {service_date}")
+
     available = [
         master for master in masters
         if is_master_available(master, service_date, slot)
     ]
+
+    print(f"[DEBUG] Доступные мастера: {[m.name for m in available]}")
 
     return available
