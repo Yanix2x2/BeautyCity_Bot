@@ -68,6 +68,15 @@ class Client(models.Model):
 
 
 class Registration(models.Model):
+    TIME_SLOTS = [
+        ('09:00-10:00', '09:00-10:00'),
+        ('10:00-11:00', '10:00-11:00'),
+        ('11:00-12:00', '11:00-12:00'),
+        ('12:00-13:00', '12:00-13:00'),
+        ('13:00-14:00', '13:00-14:00'),
+        ('14:00-15:00', '14:00-15:00'),
+        ('15:00-16:00', '15:00-16:00'),
+    ]
     salon = models.ForeignKey(
         Salon,
         verbose_name='Салон',
@@ -98,7 +107,7 @@ class Registration(models.Model):
     slot = models.CharField(
         max_length=13,
         verbose_name='Время записи',
-        default=''
+        choices=TIME_SLOTS
     )
     reminder_sent = models.BooleanField(
         default=False,
