@@ -14,10 +14,12 @@ from telegram_bot.handlers.admin_call_handler import get_help_call_handler
 
 
 def register_handlers(dp: Dispatcher) -> None:
-    dp.add_handler(get_start_handler())
     dp.add_handler(get_salon_handler())
     dp.add_handler(get_booking_entry_handler())
     dp.add_handler(get_help_call_handler())
+
+    for handler in get_start_handler():
+        dp.add_handler(handler)
 
     for handler in (
         *get_salon_select_handlers(),
