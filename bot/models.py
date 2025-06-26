@@ -8,6 +8,10 @@ class Salon(models.Model):
     def __str__(self):
         return self.address
 
+    class Meta:
+        verbose_name = "Салон"
+        verbose_name_plural = "Салоны"
+
 
 class Service(models.Model):
     treatment = models.CharField(
@@ -69,13 +73,15 @@ class Client(models.Model):
 
 class Registration(models.Model):
     TIME_SLOTS = [
-        ('09:00-10:00', '09:00-10:00'),
-        ('10:00-11:00', '10:00-11:00'),
-        ('11:00-12:00', '11:00-12:00'),
-        ('12:00-13:00', '12:00-13:00'),
-        ('13:00-14:00', '13:00-14:00'),
-        ('14:00-15:00', '14:00-15:00'),
-        ('15:00-16:00', '15:00-16:00'),
+        ('09:00', '09:00'),
+        ('10:00', '10:00'),
+        ('11:00', '11:00'),
+        ('12:00', '12:00'),
+        ('13:00', '13:00'),
+        ('14:00', '14:00'),
+        ('15:00', '15:00'),
+        ('16:00', '16:00'),
+        ('17:00', '17:00'),
     ]
     salon = models.ForeignKey(
         Salon,
@@ -115,7 +121,7 @@ class Registration(models.Model):
     )
     registration_time = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Когда произведена бронь'
+        verbose_name='Когда произведена запись'
     )
 
     def __str__(self):
@@ -126,6 +132,7 @@ class Registration(models.Model):
         verbose_name_plural = "Записи"
 
 
+
 # Registration.objects.create(
 #     salon=salon,
 #     master=master,
@@ -134,5 +141,3 @@ class Registration(models.Model):
 #     service_date="2025-06-26",
 #     slot="10:00-11:00"
 # ) Так создаём регистрацию с конкретной услугой мастера
-
-
