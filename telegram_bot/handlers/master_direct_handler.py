@@ -14,15 +14,13 @@ def get_master_direct_handlers():
 
 
 def show_master_list(update: Update, context: CallbackContext) -> None:
-    masters = Master.objects.select_related('salon').all()
+    masters = Master.objects.all()
     if not masters:
         reply_or_edit(update, "Мастера пока не добавлены.")
         return
 
-
     buttons = [
-        [InlineKeyboardButton(f"{master.name} - {master.salon.address if master.salon else 'Без салона'}",
-                              callback_data=f"direct_master_{master.id}")]
+        [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"direct_master_{master.id}")]
         for master in masters
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
@@ -33,15 +31,8 @@ def handle_master_selected(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
 
-    master_id_str = query.data.removeprefix("direct_master_")
-    try:
-        master_id = int(master_id_str)
-        master = Master.objects.get(id=master_id)
-    except (ValueError, Master.DoesNotExist):
-        reply_or_edit(update, "Такого мастера нет.")
-        return
+    master_id = int(query.data.replace("direct_master_", ""))
+    context.user_data["selected_master_id"] = master_id
+    context.user_data["flow"] = "by_master"
 
-    context.user_data["selected_master_id"] = master.id
-    context.user_data["selected_salon_id"] = master.salon.id if master.salon else None
-    context.user_data["date_action_prefix"] = "slot"
-    show_service_selection(update, context)
+    show_date_selection(update, context, action_prefix="master")

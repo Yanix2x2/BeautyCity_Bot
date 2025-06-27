@@ -1,4 +1,4 @@
-from bot.models import Registration, Master
+from bot.models import MasterSchedule, Registration, Master
 
 
 def is_master_available(master, service_date, slot) -> bool:
@@ -10,24 +10,29 @@ def is_master_available(master, service_date, slot) -> bool:
     ).exists()
 
 
-def get_available_masters(salon, service, service_date, slot):
+def get_available_masters(salon=None, service=None, work_date=None, slot=None, master=None):
     """
-    Возвращает всех мастеров, работающих в указанном салоне,
-    выполняющих данную услугу и свободных в указанную дату и слот.
+    Универсальная функция для потока by_salon и by_master:
+    - by_salon → передаются salon и service
+    - by_master → передаются master и service
     """
-    masters = Master.objects.filter(
-        salon=salon,
-        services=service
-    ).distinct()
+    if master:
+        master_ids = [master.id]
+    else:
+        schedule_qs = MasterSchedule.objects.filter(
+            salon=salon,
+            work_date=work_date,
+            master__services=service
+        ).select_related("master")
+        master_ids = schedule_qs.values_list("master_id", flat=True).distinct()
 
-    print(f"[DEBUG] Найдено мастеров в салоне {salon}: {[m.name for m in masters]}")
-    print(f"[DEBUG] Слот: {slot}, Дата: {service_date}")
+    if slot:
+        taken_master_ids = Registration.objects.filter(
+            master_id__in=master_ids,
+            service_date=work_date,
+            slot=slot
+        ).values_list("master_id", flat=True)
 
-    available = [
-        master for master in masters
-        if is_master_available(master, service_date, slot)
-    ]
+        master_ids = [mid for mid in master_ids if mid not in taken_master_ids]
 
-    print(f"[DEBUG] Доступные мастера: {[m.name for m in available]}")
-
-    return available
+    return Master.objects.filter(id__in=master_ids)

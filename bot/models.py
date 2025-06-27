@@ -35,23 +35,13 @@ class Service(models.Model):
 
 class Master(models.Model):
     name = models.CharField(max_length=50, verbose_name='Имя мастера')
-    salon = models.ForeignKey(
-        Salon,
-        verbose_name='Салон',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='masters'
-    )
     services = models.ManyToManyField(
         Service,
         verbose_name='Услуги мастера'
     )
 
     def __str__(self):
-        if self.salon:
-            return f"{self.name} из «{self.salon.address}»"
-        return "Мастер без салона"
+        return self.name
 
     class Meta:
         verbose_name = "Мастер"
@@ -132,12 +122,25 @@ class Registration(models.Model):
         verbose_name_plural = "Записи"
 
 
+class MasterSchedule(models.Model):
+    master = models.ForeignKey(
+        Master,
+        on_delete=models.CASCADE,
+        related_name="schedules",
+        verbose_name="Мастер"
+    )
+    salon = models.ForeignKey(
+        Salon,
+        on_delete=models.CASCADE,
+        related_name="schedules",
+        verbose_name="Салон"
+    )
+    work_date = models.DateField(verbose_name="Дата работы")
 
-# Registration.objects.create(
-#     salon=salon,
-#     master=master,
-#     client=client,
-#     service=hair,
-#     service_date="2025-06-26",
-#     slot="10:00-11:00"
-# ) Так создаём регистрацию с конкретной услугой мастера
+    class Meta:
+        unique_together = ("master", "work_date")
+        verbose_name = "Расписание мастера"
+        verbose_name_plural = "Расписания мастеров"
+
+    def __str__(self):
+        return f"{self.master.name} — {self.work_date} — {self.salon.address}"

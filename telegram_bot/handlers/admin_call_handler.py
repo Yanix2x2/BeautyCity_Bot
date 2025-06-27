@@ -1,6 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext, MessageHandler, Filters
 from telegram_bot.utils.reply_or_edit import reply_or_edit
+from telegram_bot.utils.main_menu import send_main_menu
 
 
 def get_help_call_handler():
@@ -13,3 +14,5 @@ def show_admin_contact(update: Update, context: CallbackContext) -> None:
         update,
         f"Вы можете позвонить администратору по номеру:\n📞 {phone}"
     )
+
+    send_main_menu(update, context)

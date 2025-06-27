@@ -13,7 +13,12 @@ RUSSIAN_WEEKDAYS = {
 
 
 def parse_date_from_str(date_str: str):
-    return datetime.strptime(date_str, "%Y-%m-%d").date()
+    for format in ("%d.%m.%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(date_str, format).date()
+        except ValueError:
+            continue
+    raise ValueError(f"Неверный формат даты: {date_str}")
 
 
 def format_date_russian_weekday(d: date) -> str:
