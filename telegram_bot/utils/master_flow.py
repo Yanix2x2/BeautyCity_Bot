@@ -64,7 +64,7 @@ def show_service_selection(update: Update, context: CallbackContext) -> None:
     flow = context.user_data.get("flow")
 
     if flow == "by_master":
-        back_callback = "back_to_slots"
+        back_callback = "back_to_dates"
     else:
         back_callback = "back_to_salons"
 

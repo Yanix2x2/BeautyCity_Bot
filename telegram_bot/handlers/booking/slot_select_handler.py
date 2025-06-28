@@ -65,7 +65,12 @@ def show_slot_selection(update: Update, context: CallbackContext) -> None:
         return
 
     buttons = [[InlineKeyboardButton(slot, callback_data=f"select_slot_{slot}")] for slot in available_slots]
-    buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_dates")])
+    
+    if flow == "by_master":
+        buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_services")])
+    else:
+        buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_dates")])
+        
     reply_or_edit(update, "Выберите удобное время:", reply_markup=InlineKeyboardMarkup(buttons))
 
 

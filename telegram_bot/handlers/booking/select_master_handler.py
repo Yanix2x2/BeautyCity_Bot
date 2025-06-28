@@ -34,7 +34,6 @@ def show_master_list(update: Update, context: CallbackContext) -> None:
             [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
             for master in masters
         ]
-        buttons.append([InlineKeyboardButton("Назад", callback_data="main_menu")])
         
         reply_or_edit(update, "Выберите мастера:", reply_markup=InlineKeyboardMarkup(buttons))
     else:
