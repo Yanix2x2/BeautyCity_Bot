@@ -29,7 +29,12 @@ def show_service_selection(update: Update, context: CallbackContext) -> None:
         )] for s in services
     ]
 
-    back_btn = "back_to_masters" if context.user_data.get("flow") == "by_master" else "back_to_salons"
+    flow = context.user_data.get("flow")
+    if flow == "by_master":
+        back_btn = "back_to_masters"
+    else:
+        back_btn = "back_to_salons"
+    
     buttons.append([InlineKeyboardButton("Назад", callback_data=back_btn)])
 
     reply_or_edit(update, "Выберите процедуру:", reply_markup=InlineKeyboardMarkup(buttons))
@@ -70,9 +75,10 @@ def save_selected_service(update: Update, context: CallbackContext) -> None:
                 reply_or_edit(update, "Мастер не работает ни в одном салоне в эту дату.")
                 return
 
-    if context.user_data.get("selected_date"):
+    if flow == "by_salon":
+        show_date_selection(update, context, action_prefix="slot")
+    elif context.user_data.get("selected_date"):
         from telegram_bot.handlers.booking.slot_select_handler import show_slot_selection
         show_slot_selection(update, context)
     else:
-        prefix = "master" if flow == "by_master" else "slot"
-        show_date_selection(update, context, action_prefix=prefix)
+        show_date_selection(update, context, action_prefix="master")

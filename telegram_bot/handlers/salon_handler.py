@@ -1,6 +1,7 @@
-from telegram import Update
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext, MessageHandler, Filters
 from bot.models import Salon
+from telegram_bot.utils.reply_or_edit import reply_or_edit
 
 
 def get_salon_handler():
@@ -8,14 +9,23 @@ def get_salon_handler():
 
 
 def show_salon_addresses(update: Update, context: CallbackContext) -> None:
+    """Показывает список салонов с кликабельными кнопками для записи."""
+
+    context.user_data["flow"] = "by_salon"
+    
     salons = Salon.objects.all()
 
     if salons.exists():
-        addresses = "\n\n".join([f"📍 {salon.address}" for salon in salons])
-        text = (
-            f"Наши салоны:\n\n{addresses}\n\n"  
-            "Чтобы записаться, нажмите «🗓 Записаться» ниже 👇"
-        )
-        update.message.reply_text(text)
+        buttons = [
+            [InlineKeyboardButton(f"📍 {salon.address}", callback_data=f"select_salon_{salon.id}")]
+            for salon in salons
+        ]
+        
+        buttons.append([InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")])
+        
+        reply_markup = InlineKeyboardMarkup(buttons)
+        
+        text = "Выберите салон для записи:"
+        reply_or_edit(update, text, reply_markup=reply_markup)
     else:
         update.message.reply_text("Пока что салоны не добавлены")

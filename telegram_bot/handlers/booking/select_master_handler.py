@@ -15,6 +15,30 @@ def get_master_select_handlers():
     ]
 
 
+def show_master_list(update: Update, context: CallbackContext) -> None:
+    """
+    Показывает список мастеров для выбора (используется для кнопки "Назад").
+    """
+    flow = context.user_data.get("flow")
+    
+    if flow == "by_master":
+        masters = Master.objects.all()
+        if not masters.exists():
+            reply_or_edit(update, "К сожалению, пока нет доступных мастеров.")
+            return
+            
+        buttons = [
+            [InlineKeyboardButton(master.name, callback_data=f"select_master_{master.id}")]
+            for master in masters
+        ]
+        buttons.append([InlineKeyboardButton("Назад", callback_data="main_menu")])
+        
+        reply_or_edit(update, "Выберите мастера:", reply_markup=InlineKeyboardMarkup(buttons))
+    else:
+        from telegram_bot.utils.master_flow import show_service_selection
+        show_service_selection(update, context)
+
+
 def show_master_selection(update: Update, context: CallbackContext) -> None:
     print("[DEBUG] show_master_selection вызван")
 

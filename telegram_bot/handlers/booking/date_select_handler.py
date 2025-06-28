@@ -33,7 +33,13 @@ def show_date_selection(update: Update, context: CallbackContext, action_prefix:
     nav.append(InlineKeyboardButton("Следующая неделя", callback_data="change_date_page_1"))
     buttons.append(nav)
 
-    buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_services")])
+    flow = context.user_data.get("flow")
+    if flow == "by_master":
+        back_btn = "back_to_masters"
+    else:
+        back_btn = "back_to_services"
+    
+    buttons.append([InlineKeyboardButton("Назад", callback_data=back_btn)])
     reply_or_edit(update, "Выберите удобную дату:", reply_markup=InlineKeyboardMarkup(buttons))
 
 
