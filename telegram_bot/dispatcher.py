@@ -12,6 +12,7 @@ from telegram_bot.handlers.booking.back_handler import get_back_handlers
 from telegram_bot.handlers.master_direct_handler import get_master_direct_handlers
 from telegram_bot.handlers.booking.slot_confirm_handler import get_slot_confirm_handler
 from telegram_bot.handlers.admin_call_handler import get_help_call_handler
+from telegram_bot.handlers.history_handler import get_history_handlers
 
 
 def register_handlers(dp: Dispatcher) -> None:
@@ -30,6 +31,7 @@ def register_handlers(dp: Dispatcher) -> None:
         *get_slot_select_handlers(),
         *get_back_handlers(),
         *get_master_direct_handlers(),
+        *get_history_handlers(),
         *get_slot_confirm_handler(),
     ):
         dp.add_handler(handler)

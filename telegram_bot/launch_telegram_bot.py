@@ -1,7 +1,11 @@
 import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "beauty_city.settings")
+import django
+django.setup()
+
 from dotenv import load_dotenv
 from telegram.ext import Updater
-from dispatcher import register_handlers
+from telegram_bot.dispatcher import register_handlers
 
 
 def main():
