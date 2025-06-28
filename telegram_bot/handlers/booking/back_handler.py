@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext, CallbackQueryHandler
 from telegram_bot.handlers.booking.salon_select_handler import show_salon_selection
 from telegram_bot.handlers.booking.service_select_handler import show_service_selection
-from telegram_bot.handlers.booking.select_master_handler import show_master_list
+from telegram_bot.handlers.booking.select_master_handler import show_master_list, show_masters_for_salon
 from telegram_bot.handlers.booking.date_select_handler import show_date_selection
 from telegram_bot.handlers.booking.slot_select_handler import show_slot_selection
 from telegram_bot.handlers.salon_handler import show_salon_addresses
@@ -27,7 +27,11 @@ def handle_back_action(update: Update, context: CallbackContext) -> None:
         return
 
     elif query.data == "back_to_masters":
-        show_master_list(update, context)
+        flow = context.user_data.get("flow")
+        if flow == "by_salon":
+            show_masters_for_salon(update, context)
+        else:
+            show_master_list(update, context)
         return
 
     elif query.data == "back_to_dates":

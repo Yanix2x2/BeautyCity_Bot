@@ -32,11 +32,17 @@ def request_phone_number(update: Update, context: CallbackContext) -> None:
         reply_or_edit(update, "Пожалуйста, выберите время записи.")
         return
 
+    flow = context.user_data.get("flow")
+    if flow == "by_master":
+        back_btn = "back_to_slots"
+    else:
+        back_btn = "back_to_masters"
+
     reply_or_edit(
         update,
         "Пожалуйста, введите свой номер телефона:",
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Назад", callback_data="back_to_masters")]
+            [InlineKeyboardButton("Назад", callback_data=back_btn)]
         ])
     )
 

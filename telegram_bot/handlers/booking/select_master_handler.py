@@ -22,13 +22,16 @@ def show_master_list(update: Update, context: CallbackContext) -> None:
     flow = context.user_data.get("flow")
     
     if flow == "by_master":
+        context.user_data.pop("selected_service_id", None)
+        context.user_data.pop("selected_date", None)
+        
         masters = Master.objects.all()
         if not masters.exists():
             reply_or_edit(update, "К сожалению, пока нет доступных мастеров.")
             return
             
         buttons = [
-            [InlineKeyboardButton(master.name, callback_data=f"select_master_{master.id}")]
+            [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
             for master in masters
         ]
         buttons.append([InlineKeyboardButton("Назад", callback_data="main_menu")])
@@ -72,7 +75,7 @@ def show_master_selection(update: Update, context: CallbackContext) -> None:
         return
 
     buttons = [
-        [InlineKeyboardButton(master.name, callback_data=f"select_master_{master.id}")]
+        [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
         for master in available_masters
     ]
     buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_dates")])
@@ -139,7 +142,7 @@ def show_master_selection_after_slot(update: Update, context: CallbackContext) -
         return
 
     buttons = [
-        [InlineKeyboardButton(master.name, callback_data=f"select_master_{master.id}")]
+        [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
         for master in masters
     ]
     buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_slots")])
@@ -169,6 +172,11 @@ def save_selected_master(update: Update, context: CallbackContext) -> None:
         return
 
     if flow == "by_master":
+        if not context.user_data.get("selected_date"):
+            from telegram_bot.handlers.booking.date_select_handler import show_date_selection
+            show_date_selection(update, context, action_prefix="master")
+            return
+        
         selected_date = parse_date_from_str(context.user_data["selected_date"])
         try:
             schedule = MasterSchedule.objects.get(master_id=master_id, work_date=selected_date)
@@ -187,3 +195,41 @@ def save_selected_master(update: Update, context: CallbackContext) -> None:
     print(f"[DEBUG] user_data после выбора мастера: {context.user_data}")
 
     request_phone_number(update, context)
+
+
+def show_masters_for_salon(update: Update, context: CallbackContext) -> None:
+    """
+    Показывает мастеров для выбранного салона, услуги, даты и времени (flow "by_salon").
+    """
+    salon_id = context.user_data.get("selected_salon_id")
+    service_id = context.user_data.get("selected_service_id")
+    slot = context.user_data.get("selected_slot")
+    date_str = context.user_data.get("selected_date")
+
+    if not all([salon_id, service_id, slot, date_str]):
+        reply_or_edit(update, "Ошибка: отсутствуют данные для отображения мастеров.")
+        return
+
+    selected_date = parse_date_from_str(date_str)
+
+    try:
+        salon = Salon.objects.get(id=salon_id)
+        service = Service.objects.get(id=service_id)
+    except (Salon.DoesNotExist, Service.DoesNotExist):
+        reply_or_edit(update, "Салон или услуга не найдены.")
+        return
+
+    masters = get_available_masters(salon, service, selected_date, slot)
+
+    if not masters:
+        reply_or_edit(update, "К сожалению, на это время нет доступных мастеров.")
+        return
+
+    buttons = [
+        [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
+        for master in masters
+    ]
+    buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_slots")])
+
+    reply_markup = InlineKeyboardMarkup(buttons)
+    reply_or_edit(update, "Выберите мастера, доступного в это время:", reply_markup=reply_markup)

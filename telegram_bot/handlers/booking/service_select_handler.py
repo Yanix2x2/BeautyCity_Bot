@@ -31,7 +31,7 @@ def show_service_selection(update: Update, context: CallbackContext) -> None:
 
     flow = context.user_data.get("flow")
     if flow == "by_master":
-        back_btn = "back_to_masters"
+        back_btn = "back_to_slots"
     else:
         back_btn = "back_to_salons"
     
@@ -77,6 +77,9 @@ def save_selected_service(update: Update, context: CallbackContext) -> None:
 
     if flow == "by_salon":
         show_date_selection(update, context, action_prefix="slot")
+    elif flow == "by_master":
+        from telegram_bot.handlers.booking.slot_select_handler import show_slot_selection
+        show_slot_selection(update, context)
     elif context.user_data.get("selected_date"):
         from telegram_bot.handlers.booking.slot_select_handler import show_slot_selection
         show_slot_selection(update, context)

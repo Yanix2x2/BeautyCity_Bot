@@ -5,6 +5,7 @@ from telegram_bot.utils.calendar_tools import format_date_russian_weekday, get_w
 from telegram_bot.handlers.booking.slot_select_handler import show_slot_selection
 from bot.models import MasterSchedule
 from telegram_bot.utils.calendar_tools import parse_date_from_str
+from telegram_bot.utils.master_flow import show_service_selection
 
 
 def get_date_select_handlers():
@@ -80,4 +81,9 @@ def save_selected_date(update: Update, context: CallbackContext) -> None:
         return
 
     print(f"[DEBUG] Сохранена дата: {context.user_data['selected_date']}")
-    show_slot_selection(update, context)
+    
+    flow = context.user_data.get("flow")
+    if flow == "by_master":
+        show_service_selection(update, context)
+    else:
+        show_slot_selection(update, context)

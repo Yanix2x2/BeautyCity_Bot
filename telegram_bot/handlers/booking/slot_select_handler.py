@@ -78,9 +78,6 @@ def handle_slot_selected(update: Update, context: CallbackContext) -> None:
     flow = context.user_data.get("flow")
 
     if flow == "by_master":
-        if not context.user_data.get("selected_service_id"):
-            show_service_selection(update, context)
-            return
         request_phone_number(update, context)
 
     elif flow == "by_salon":

@@ -21,8 +21,6 @@ def show_salon_addresses(update: Update, context: CallbackContext) -> None:
             for salon in salons
         ]
         
-        buttons.append([InlineKeyboardButton("🏠 Главное меню", callback_data="main_menu")])
-        
         reply_markup = InlineKeyboardMarkup(buttons)
         
         text = "Выберите салон для записи:"

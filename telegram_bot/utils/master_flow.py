@@ -34,7 +34,7 @@ def show_master_selection_after_slot(update: Update, context: CallbackContext) -
         return
 
     buttons = [
-        [InlineKeyboardButton(master.name, callback_data=f"select_master_{master.id}")]
+        [InlineKeyboardButton(f"👤 {master.name}", callback_data=f"select_master_{master.id}")]
         for master in masters
     ]
     buttons.append([InlineKeyboardButton("Назад", callback_data="back_to_slots")])
@@ -64,7 +64,7 @@ def show_service_selection(update: Update, context: CallbackContext) -> None:
     flow = context.user_data.get("flow")
 
     if flow == "by_master":
-        back_callback = "back_to_masters"
+        back_callback = "back_to_slots"
     else:
         back_callback = "back_to_salons"
 
@@ -86,5 +86,4 @@ def show_salon_selection(update, context):
         [InlineKeyboardButton(salon.address, callback_data=f"select_salon_{salon.id}")]
         for salon in salons
     ]
-    buttons.append([InlineKeyboardButton("На главную", callback_data="back_to_main_menu")])
     reply_or_edit(update, "Выберите салон для записи:", reply_markup=InlineKeyboardMarkup(buttons))
