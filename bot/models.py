@@ -113,6 +113,11 @@ class Registration(models.Model):
         auto_now_add=True,
         verbose_name='Когда произведена запись'
     )
+    
+    is_paid = models.BooleanField(
+        default=False,
+        verbose_name='Оплачено через бота'
+    )
 
     def __str__(self):
         return f"Запись №{self.pk} на {self.service_date} в {self.slot}"

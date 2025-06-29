@@ -6,6 +6,7 @@ from telegram_bot.utils.calendar_tools import parse_date_from_str
 from telegram_bot.utils.main_menu import send_main_menu
 from telegram_bot.utils.validation import check_required_fields
 from bot.models import Registration, Client, MasterSchedule
+from telegram_bot.handlers.payment_handler import offer_payment_after_registration
 
 
 def get_slot_confirm_handler():
@@ -111,15 +112,4 @@ def confirm_registration(update: Update, context: CallbackContext) -> None:
 
     context.user_data.clear()
 
-    reply_or_edit(
-        update,
-        f"📌 *Запись подтверждена!*\n\n"
-        f"📅 Дата: *{registration.service_date.strftime('%d.%m.%Y')}*\n"
-        f"🕒 Время: *{registration.slot}*\n"
-        f"👤 Мастер: *{registration.master.name}*\n"
-        f"🏠 Салон: *{registration.salon.address}*\n"
-        f"📞 Телефон: *{client.phonenumber}*",
-        parse_mode="Markdown"
-    )
-
-    send_main_menu(update, context)
+    offer_payment_after_registration(update, context, registration)

@@ -13,6 +13,7 @@ from telegram_bot.handlers.master_direct_handler import get_master_direct_handle
 from telegram_bot.handlers.booking.slot_confirm_handler import get_slot_confirm_handler
 from telegram_bot.handlers.admin_call_handler import get_help_call_handler
 from telegram_bot.handlers.history_handler import get_history_handlers
+from telegram_bot.handlers.payment_handler import get_payment_handlers
 
 
 def register_handlers(dp: Dispatcher) -> None:
@@ -33,6 +34,7 @@ def register_handlers(dp: Dispatcher) -> None:
         *get_master_direct_handlers(),
         *get_history_handlers(),
         *get_slot_confirm_handler(),
+        *get_payment_handlers(),
     ):
         dp.add_handler(handler)
 
