@@ -26,8 +26,8 @@ Telegram-бот для автоматизации записи в салоны �
 ## Установка
 
 ```bash
-git clone https://github.com/your-username/beauty-city-bot.git
-cd beauty-city-bot
+git clone https://github.com/Yanix2x2/BeautyCity_Bot
+cd BeautyCity_Bot
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
