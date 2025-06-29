@@ -68,12 +68,14 @@ def handle_history_filter(update: Update, context: CallbackContext) -> None:
     message = f"{title}:\n\n"
     for reg in registrations:
         status = "✅ Завершена" if reg.service_date < now else "⏳ Ожидает"
+        payment_status = "💳 Оплачено" if reg.is_paid else "💰 Не оплачено"
         message += (
             f"📅 {reg.service_date.strftime('%d.%m.%Y')} в {reg.slot}\n"
             f"👤 {reg.master.name}\n"
             f"🏠 {reg.salon.address}\n"
             f"💇 {reg.service.treatment}\n"
-            f"📊 {status}\n\n"
+            f"📊 {status}\n"
+            f"💳 {payment_status}\n\n"
         )
     
     buttons = [
