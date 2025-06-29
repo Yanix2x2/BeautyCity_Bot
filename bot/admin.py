@@ -89,6 +89,7 @@ class RegistrationAdmin(admin.ModelAdmin):
         'salon_link',
         'service_date',
         'slot',
+        'payment_status',
     )
 
     @admin.display(description='Мастер')
@@ -98,6 +99,13 @@ class RegistrationAdmin(admin.ModelAdmin):
     @admin.display(description='Салон')
     def salon_link(self, obj):
         return obj.salon.address if obj.salon else "Не выбран"
+
+    @admin.display(description='Статус оплаты')
+    def payment_status(self, obj):
+        if obj.is_paid:
+            return "✅ Оплачено"
+        else:
+            return "💰 Не оплачено"
 
 
 class MasterScheduleInline(admin.TabularInline):
