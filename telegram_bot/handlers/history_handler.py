@@ -89,4 +89,4 @@ def handle_main_menu(update: Update, context: CallbackContext) -> None:
     """Возвращает пользователя в главное меню."""
     query = update.callback_query
     query.answer()
-    send_main_menu(update, context) 
+    send_main_menu(update, context)

@@ -167,4 +167,4 @@ def handle_failed_payment(update: Update, context: CallbackContext) -> None:
         update,
         "❌ Оплата не прошла. Пожалуйста, попробуйте позже или обратитесь к администратору."
     )
-    send_main_menu(update, context) 
+    send_main_menu(update, context)
