@@ -33,8 +33,9 @@ ALLOWED_HOSTS = [
     os.getenv('HOST', '*')
 ]
 
-CSRF_TRUSTED_ORIGINS = ['*']
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://beautycitybot-production.up.railway.app'
+]
 
 # Application definition
 
