@@ -33,9 +33,7 @@ ALLOWED_HOSTS = [
     os.getenv('HOST', '*')
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://' + os.getenv('HOST'),
-]
+CSRF_TRUSTED_ORIGINS = ['*']
 
 
 # Application definition
